@@ -1,0 +1,14 @@
+data: {"id":"chatcmpl-stream-thinking","object":"chat.completion.chunk","created":1700000100,"model":"kimi-k2.6","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-stream-thinking","object":"chat.completion.chunk","created":1700000100,"model":"kimi-k2.6","choices":[{"index":0,"delta":{"reasoning_content":"Preciso somar"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-stream-thinking","object":"chat.completion.chunk","created":1700000100,"model":"kimi-k2.6","choices":[{"index":0,"delta":{"reasoning_content":" 40 + 2."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-stream-thinking","object":"chat.completion.chunk","created":1700000100,"model":"kimi-k2.6","choices":[{"index":0,"delta":{"reasoning_content":" 40 + 2 = 42."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-stream-thinking","object":"chat.completion.chunk","created":1700000100,"model":"kimi-k2.6","choices":[{"index":0,"delta":{"content":"A resposta final é 42."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-stream-thinking","object":"chat.completion.chunk","created":1700000100,"model":"kimi-k2.6","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+
+data: [DONE]
+

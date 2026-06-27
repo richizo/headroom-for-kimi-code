@@ -5,6 +5,7 @@ Forwards OpenAI-compatible chat completion requests to the Moonshot API.
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 from collections.abc import AsyncIterator
@@ -213,11 +214,70 @@ class MoonshotBackend(Backend):
         body: dict[str, Any],
         headers: dict[str, str],
     ) -> AsyncIterator[str]:
-        """Stream OpenAI-format chat completion (implemented in Phase 4)."""
-        raise NotImplementedError(
-            "stream_openai_message is implemented in Phase 4"
-        )
-        yield ""  # type: ignore[misc]  # pragma: no cover
+        """Stream an OpenAI-format chat completion from Moonshot.
+
+        Resolves model aliases such as ``kimi-latest`` before forwarding the
+        request with ``stream: true`` to the Moonshot API. Yields SSE events
+        as received, preserving provider-specific fields like
+        ``delta.reasoning_content``.
+        """
+        model = body.get("model", "")
+        request_body = body
+        if model == "kimi-latest":
+            resolved = await self._resolve_model_alias(model)
+            request_body = {**body, "model": resolved}
+
+        upstream_headers: dict[str, str] = {
+            "content-type": "application/json",
+            "Authorization": f"Bearer {self.api_key}",
+        }
+
+        try:
+            async with self._client.stream(
+                "POST",
+                f"{self.base_url}/chat/completions",
+                json=request_body,
+                headers=upstream_headers,
+                timeout=self.timeout,
+            ) as response:
+                if response.status_code >= 400:
+                    await response.aread()
+                    try:
+                        response_body = response.json()
+                    except Exception:
+                        response_body = {
+                            "error": {"message": response.text, "type": "api_error"}
+                        }
+                    logger.error(
+                        "Moonshot upstream streaming error: status=%d body=%s",
+                        response.status_code,
+                        str(response_body)[:200],
+                    )
+                    yield f"data: {json.dumps(response_body)}\n\n"
+                    yield "data: [DONE]\n\n"
+                    return
+
+                event_lines: list[str] = []
+                async for line in response.aiter_lines():
+                    if line == "":
+                        if event_lines:
+                            event = "\n".join(event_lines)
+                            yield f"{event}\n\n"
+                            if event == "data: [DONE]":
+                                return
+                            event_lines = []
+                    else:
+                        event_lines.append(line)
+
+                if event_lines:
+                    yield "\n".join(event_lines) + "\n\n"
+
+        except httpx.HTTPError as exc:
+            logger.error("Moonshot streaming request failed: %s", exc)
+            error_body = {"error": {"message": str(exc), "type": "api_error"}}
+            yield f"data: {json.dumps(error_body)}\n\n"
+
+        yield "data: [DONE]\n\n"
 
     async def close(self) -> None:
         """Close the upstream HTTP client."""
