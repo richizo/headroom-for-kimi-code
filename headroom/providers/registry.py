@@ -21,6 +21,7 @@ if TYPE_CHECKING:
 
 AnyLLMBackendType: Any = None
 LiteLLMBackendType: Any = None
+MoonshotBackendType: Any = None
 
 
 @dataclass(frozen=True)
@@ -152,10 +153,32 @@ def create_proxy_backend(
     openai_api_url: str | None = None,
     anyllm_backend_cls: Any | None = None,
     litellm_backend_cls: Any | None = None,
+    moonshot_backend_cls: Any | None = None,
 ) -> Backend | None:
     """Create the optional translated backend for Anthropic proxy requests."""
     if backend == "anthropic":
         return None
+
+    if backend == "moonshot":
+        try:
+            backend_cls = moonshot_backend_cls or _load_moonshot_backend()
+            api_key = os.environ.get("MOONSHOT_API_KEY")
+            base_url = os.environ.get("MOONSHOT_BASE_URL")
+            backend_kwargs: dict[str, Any] = {"api_key": api_key}
+            if base_url:
+                backend_kwargs["base_url"] = base_url
+            instance = cast(
+                "Backend",
+                backend_cls(**backend_kwargs),
+            )
+            logger.info("Moonshot backend enabled")
+            return instance
+        except ImportError as exc:
+            logger.warning("Moonshot backend not available: %s", exc)
+            return None
+        except Exception as exc:  # pragma: no cover - defensive logging
+            logger.error("Failed to initialize Moonshot backend: %s", exc)
+            return None
 
     if backend == "anyllm" or backend.startswith("anyllm-"):
         provider = anyllm_provider
@@ -196,6 +219,8 @@ def format_backend_status(*, backend: str, anyllm_provider: str, bedrock_region:
     """Build the human-readable backend status string shown in CLI/server output."""
     if backend == "anthropic":
         return "ANTHROPIC (direct API)"
+    if backend == "moonshot":
+        return "Moonshot"
     if backend == "anyllm" or backend.startswith("anyllm-"):
         return f"{anyllm_provider.title()} via any-llm"
 
@@ -250,6 +275,15 @@ def _load_litellm_backend() -> Any:
 
         LiteLLMBackendType = LiteLLMBackend
     return LiteLLMBackendType
+
+
+def _load_moonshot_backend() -> Any:
+    global MoonshotBackendType
+    if MoonshotBackendType is None:
+        from headroom.backends import MoonshotBackend
+
+        MoonshotBackendType = MoonshotBackend
+    return MoonshotBackendType
 
 
 def _call_openai_transport(

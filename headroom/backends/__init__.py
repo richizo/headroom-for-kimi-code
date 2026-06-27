@@ -6,6 +6,7 @@ Backends handle the translation between the proxy's canonical format
 Supported backend libraries:
 - LiteLLM: 100+ providers (bedrock, vertex_ai, azure, openrouter, etc.)
 - any-llm: 38+ providers (openai, anthropic, mistral, groq, ollama, etc.)
+- Moonshot: native OpenAI-compatible backend for Kimi models
 
 Usage:
     # LiteLLM backend
@@ -13,10 +14,21 @@ Usage:
 
     # any-llm backend
     headroom proxy --backend anyllm --anyllm-provider openai
+
+    # Moonshot backend
+    headroom proxy --backend moonshot
 """
 
 from .anyllm import AnyLLMBackend
 from .base import Backend, BackendResponse, StreamEvent
 from .litellm import LiteLLMBackend
+from .moonshot import MoonshotBackend
 
-__all__ = ["Backend", "BackendResponse", "StreamEvent", "LiteLLMBackend", "AnyLLMBackend"]
+__all__ = [
+    "Backend",
+    "BackendResponse",
+    "StreamEvent",
+    "LiteLLMBackend",
+    "AnyLLMBackend",
+    "MoonshotBackend",
+]
