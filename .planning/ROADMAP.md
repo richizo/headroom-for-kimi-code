@@ -14,7 +14,7 @@ Este roadmap leva o Headroom de "sem suporte a Kimi" até "Kimi Code CLI pode ro
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Backend Moonshot non-streaming** - Implementar MoonshotBackend com chat completions non-streaming, mapeamento de modelos, autenticação e registro no discovery
-- [ ] **Phase 2: Testes e integração de middlewares** - Validar que cache, compressão e telemetria do Headroom se aplicam ao backend Moonshot
+- [x] **Phase 2: Testes e integração de middlewares** - Validar que cache, compressão e telemetria do Headroom se aplicam ao backend Moonshot
 - [ ] **Phase 3: Suporte a thinking/reasoning** - Expor `reasoning_content` e suportar `enable_thinking` da API Moonshot
 - [ ] **Phase 4: Streaming** - Implementar `stream_openai_message` com Server-Sent Events
 
@@ -61,8 +61,8 @@ Plans:
 
 Plans:
 
-- [ ] 02-01: Adicionar testes de integração do backend através do proxy
-- [ ] 02-02: Validar e ajustar aplicação de cache, compressão e telemetria sobre o backend Moonshot
+- [x] 02-01: Adicionar testes de integração do backend através do proxy
+- [x] 02-02: Validar e ajustar aplicação de cache, compressão e telemetria sobre o backend Moonshot
 
 ### Phase 3: Suporte a thinking/reasoning
 
@@ -109,6 +109,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Backend Moonshot non-streaming | 3/3 | Completed    | 2026-06-27 |
-| 2. Testes e integração de middlewares | 0/2 | Planned | - |
+| 2. Testes e integração de middlewares | 2/2 | Completed | 2026-06-27 |
 | 3. Suporte a thinking/reasoning | 0/2 | Not started | - |
 | 4. Streaming | 0/1 | Not started | - |

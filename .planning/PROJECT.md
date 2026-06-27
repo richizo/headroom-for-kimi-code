@@ -21,13 +21,13 @@ Qualquer cliente que fale o protocolo OpenAI-compatible (incluindo Kimi Code CLI
 
 ### Active
 
-- [ ] Implementar backend `MoonshotBackend` seguindo a interface `Backend` do Headroom
-- [ ] Suportar modelos `kimi-k2` e `kimi-latest` no mapeamento de modelos
-- [ ] Implementar caminho non-streaming (`send_openai_message`) para chat completions OpenAI-compatible
+- [x] Implementar backend `MoonshotBackend` seguindo a interface `Backend` do Headroom
+- [x] Suportar modelos `kimi-k2` e `kimi-latest` no mapeamento de modelos
+- [x] Implementar caminho non-streaming (`send_openai_message`) para chat completions OpenAI-compatible
 - [ ] Permitir configuração de credenciais e endpoint via perfil de backend (não apenas variável de ambiente única)
-- [ ] Integrar o backend ao registro/discovery de backends existente
-- [ ] Garantir que cache inteligente, compressão de contexto e captura/telemetria sejam aplicadas às chamadas Kimi
-- [ ] Adicionar testes unitários/integração para o novo backend
+- [x] Integrar o backend ao registro/discovery de backends existente
+- [x] Garantir que cache inteligente, compressão de contexto e captura/telemetria sejam aplicadas às chamadas Kimi
+- [x] Adicionar testes unitários/integração para o novo backend
 
 ### Out of Scope
 
