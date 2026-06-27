@@ -21,6 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 ### Phase 1: Backend Moonshot non-streaming
 **Goal**: Ter um backend funcional no Headroom capaz de encaminhar chat completions non-streaming para a API Moonshot/Kimi.
+**Mode:** mvp
 **Depends on**: Nothing (first phase)
 **Requirements**: Backend Moonshot, mapeamento de modelos, autenticação via perfil, registro no discovery
 **Success Criteria** (what must be TRUE):
@@ -37,6 +38,7 @@ Plans:
 
 ### Phase 2: Testes e integração de middlewares
 **Goal**: Garantir que as capacidades de valor do Headroom (cache, compressão, telemetria) realmente se aplicam às chamadas Kimi.
+**Mode:** mvp
 **Depends on**: Phase 1
 **Requirements**: Cache inteligente, compressão de contexto, captura/telemetria
 **Success Criteria** (what must be TRUE):
@@ -52,6 +54,7 @@ Plans:
 
 ### Phase 3: Suporte a thinking/reasoning
 **Goal**: Permitir uso dos modelos Kimi em modo thinking, expondo o conteúdo de raciocínio ao cliente.
+**Mode:** mvp
 **Depends on**: Phase 2
 **Requirements**: Suporte a thinking/reasoning
 **Success Criteria** (what must be TRUE):
@@ -66,6 +69,7 @@ Plans:
 
 ### Phase 4: Streaming
 **Goal**: Suportar respostas em streaming para chat completions Kimi.
+**Mode:** mvp
 **Depends on**: Phase 3
 **Requirements**: Streaming
 **Success Criteria** (what must be TRUE):
