@@ -13,7 +13,7 @@ Este roadmap leva o Headroom de "sem suporte a Kimi" até "Kimi Code CLI pode ro
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Backend Moonshot non-streaming** - Implementar MoonshotBackend com chat completions non-streaming, mapeamento de modelos, autenticação e registro no discovery
+- [x] **Phase 1: Backend Moonshot non-streaming** - Implementar MoonshotBackend com chat completions non-streaming, mapeamento de modelos, autenticação e registro no discovery
 - [ ] **Phase 2: Testes e integração de middlewares** - Validar que cache, compressão e telemetria do Headroom se aplicam ao backend Moonshot
 - [ ] **Phase 3: Suporte a thinking/reasoning** - Expor `reasoning_content` e suportar `enable_thinking` da API Moonshot
 - [ ] **Phase 4: Streaming** - Implementar `stream_openai_message` com Server-Sent Events
@@ -33,16 +33,16 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A chave do perfil de backend é usada no header `Authorization` de upstream
   4. O response é retornado ao cliente no formato OpenAI chat completion
 
-**Plans**: 0/3 plans executed
+**Plans**: 3/3 plans executed
 
 Plans:
 
-- [ ] 01-01-PLAN.md
-- [ ] 01-02-PLAN.md
-- [ ] 01-03-PLAN.md
-- [ ] 01-01: Criar estrutura inicial de `MoonshotBackend` e configuração de perfil
-- [ ] 01-02: Implementar `send_openai_message`, `map_model_id` e `supports_model`
-- [ ] 01-03: Registrar backend no discovery e adicionar testes unitários básicos
+- [x] 01-01-PLAN.md
+- [x] 01-02-PLAN.md
+- [x] 01-03-PLAN.md
+- [x] 01-01: Criar estrutura inicial de `MoonshotBackend` e configuração de perfil
+- [x] 01-02: Implementar `send_openai_message`, `map_model_id` e `supports_model`
+- [x] 01-03: Registrar backend no discovery e adicionar testes unitários básicos
 
 ### Phase 2: Testes e integração de middlewares
 
@@ -108,7 +108,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Backend Moonshot non-streaming | 0/3 | Planned    |  |
-| 2. Testes e integração de middlewares | 0/2 | Not started | - |
+| 1. Backend Moonshot non-streaming | 3/3 | Completed    | 2026-06-27 |
+| 2. Testes e integração de middlewares | 0/2 | Planned | - |
 | 3. Suporte a thinking/reasoning | 0/2 | Not started | - |
 | 4. Streaming | 0/1 | Not started | - |
