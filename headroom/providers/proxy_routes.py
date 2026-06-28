@@ -23,6 +23,7 @@ def _api_target(proxy: Any, provider_name: str) -> str:
         "gemini": "GEMINI_API_URL",
         "cloudcode": "CLOUDCODE_API_URL",
         "vertex": "VERTEX_API_URL",
+        "moonshot": "MOONSHOT_API_URL",
     }
     legacy_attr = legacy_attrs[provider_name]
     return cast(str, getattr(proxy, legacy_attr, proxy.provider_runtime.api_target(provider_name)))
@@ -548,6 +549,19 @@ def register_provider_routes(app: FastAPI, proxy: Any) -> None:
     @app.post("/backend-api/codex/responses")
     async def openai_codex_nested_responses(request: Request):
         return await proxy.handle_openai_responses(request)
+
+    # Moonshot/Kimi proprietary endpoints: web search and web fetch
+    @app.post("/coding/v1/search")
+    async def moonshot_search(request: Request):
+        return await proxy.handle_passthrough(
+            request, _api_target(proxy, "moonshot"), "search", "moonshot"
+        )
+
+    @app.post("/coding/v1/fetch")
+    async def moonshot_fetch(request: Request):
+        return await proxy.handle_passthrough(
+            request, _api_target(proxy, "moonshot"), "fetch", "moonshot"
+        )
 
     @app.websocket("/v1/responses")
     async def openai_responses_ws(websocket: WebSocket):

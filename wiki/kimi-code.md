@@ -39,6 +39,7 @@ O Headroom já possui backend nativo para Moonshot (`--backend moonshot`). Apont
 ```bash
 export MOONSHOT_API_KEY="<sua-chave-do-kimi-code>"
 export MOONSHOT_BASE_URL="https://api.kimi.com/coding/v1"
+export ANTHROPIC_API_KEY="sk-ant-dummy"  # obrigatório para o proxy, mas ignorado no modo moonshot
 
 headroom proxy \
   --backend moonshot \
@@ -50,6 +51,8 @@ headroom proxy \
 O proxy vai expor:
 
 - `http://127.0.0.1:8787/v1/chat/completions` — compatível com OpenAI/Kimi Code
+- `http://127.0.0.1:8787/coding/v1/search` — web search do Kimi Code
+- `http://127.0.0.1:8787/coding/v1/fetch` — web fetch do Kimi Code
 - `/health`, `/stats`, `/metrics` — observabilidade
 
 ## Configurar o Kimi Code CLI para usar o Headroom
@@ -57,11 +60,41 @@ O proxy vai expor:
 O Kimi Code CLI permite configurar providers customizados em `~/.kimi-code/config.toml`. Crie ou edite o arquivo:
 
 ```toml
-[providers.headroom]
+# Modelo padrão via proxy Headroom
+default_model = "headroom/kimi-for-coding"
+
+# Modelo que usa o proxy Headroom
+[models."headroom/kimi-for-coding"]
+provider = "headroom"
+model = "kimi-for-coding"
+max_context_size = 262144
+capabilities = [ "thinking", "always_thinking", "image_in", "video_in", "tool_use" ]
+display_name = "Headroom Kimi"
+
+# Provider Headroom (OpenAI-compatible) apontando para o proxy local
+[providers."headroom"]
 name = "Headroom Proxy"
 base_url = "http://127.0.0.1:8787/v1"
 api_key = "sk-dummy"  # o Headroom ignora essa chave; ela só satisfaz o client
 model = "kimi-for-coding"
+type = "openai"
+
+# Ferramentas de search e fetch também roteadas pelo proxy
+[services.moonshot_search]
+base_url = "http://127.0.0.1:8787/coding/v1/search"
+api_key = ""
+
+[services.moonshot_search.oauth]
+storage = "file"
+key = "oauth/kimi-code"
+
+[services.moonshot_fetch]
+base_url = "http://127.0.0.1:8787/coding/v1/fetch"
+api_key = ""
+
+[services.moonshot_fetch.oauth]
+storage = "file"
+key = "oauth/kimi-code"
 ```
 
 Depois, dentro do Kimi Code, use `/provider headroom` (ou o comando equivalente do seu `kimi-code`) para trocar para o provider Headroom.
@@ -143,9 +176,12 @@ curl -s http://127.0.0.1:8787/stats | python -m json.tool
 headroom dashboard
 ```
 
+O dashboard mostra o agente `moonshot` com as requisições de `chat/completions`, `search` e `fetch` agrupadas.
+
 ## Notas importantes
 
 - A API do Kimi Code usa autenticação via API Key criada no [Kimi Code Console](https://www.kimi.com/code/console).
 - O Kimi Code Console permite até 5 chaves; cada chave é exibida apenas uma vez no momento da criação.
 - O quota do Kimi Code é compartilhado entre CLI, VS Code e requisições via API Key.
 - Não altere o `User-Agent` do client; isso pode violar os termos de uso da Moonshot.
+- As ferramentas `search` e `fetch` do Kimi Code agora passam pelo proxy Headroom; o encaminhamento é passthrough (verbatim) para a API Kimi, mantendo a mesma autenticação e formato de request.

@@ -14,6 +14,7 @@ from headroom.providers.gemini import DEFAULT_API_URL as DEFAULT_GEMINI_API_URL
 
 DEFAULT_CLOUDCODE_API_URL = "https://cloudcode-pa.googleapis.com"
 DEFAULT_VERTEX_API_URL = "https://us-central1-aiplatform.googleapis.com"
+DEFAULT_MOONSHOT_API_URL = "https://api.kimi.com/coding/v1"
 
 if TYPE_CHECKING:
     from headroom.backends.base import Backend
@@ -33,6 +34,7 @@ class ProviderApiOverrides:
     gemini: str | None = None
     cloudcode: str | None = None
     vertex: str | None = None
+    moonshot: str | None = None
 
 
 @dataclass(frozen=True)
@@ -44,6 +46,7 @@ class ProviderApiTargets:
     gemini: str = DEFAULT_GEMINI_API_URL
     cloudcode: str = DEFAULT_CLOUDCODE_API_URL
     vertex: str = DEFAULT_VERTEX_API_URL
+    moonshot: str = DEFAULT_MOONSHOT_API_URL
 
 
 @dataclass(frozen=True)
@@ -61,6 +64,7 @@ class ProxyProviderRuntime:
             "gemini": self.api_targets.gemini,
             "cloudcode": self.api_targets.cloudcode,
             "vertex": self.api_targets.vertex,
+            "moonshot": self.api_targets.moonshot,
         }[provider_name]
 
     def pipeline_provider(self, provider_name: str) -> Provider:
@@ -101,6 +105,7 @@ def resolve_api_overrides(
     gemini_api_url: str | None,
     cloudcode_api_url: str | None,
     vertex_api_url: str | None = None,
+    moonshot_api_url: str | None = None,
     environ: Mapping[str, str] | None = None,
 ) -> ProviderApiOverrides:
     """Resolve provider API URL overrides from CLI/config inputs and environment."""
@@ -113,6 +118,7 @@ def resolve_api_overrides(
         gemini=gemini_api_url or env.get("GEMINI_TARGET_API_URL"),
         cloudcode=cloudcode_api_url or env.get("CLOUDCODE_TARGET_API_URL"),
         vertex=vertex_api_url or env.get("VERTEX_TARGET_API_URL"),
+        moonshot=moonshot_api_url or env.get("MOONSHOT_TARGET_API_URL") or env.get("MOONSHOT_BASE_URL"),
     )
 
 
@@ -124,6 +130,7 @@ def resolve_api_targets(overrides: ProviderApiOverrides) -> ProviderApiTargets:
         gemini=_normalize_api_url(overrides.gemini, default=DEFAULT_GEMINI_API_URL),
         cloudcode=_normalize_api_url(overrides.cloudcode, default=DEFAULT_CLOUDCODE_API_URL),
         vertex=_normalize_api_url(overrides.vertex, default=DEFAULT_VERTEX_API_URL),
+        moonshot=_normalize_api_url(overrides.moonshot, default=DEFAULT_MOONSHOT_API_URL),
     )
 
 

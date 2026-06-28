@@ -582,6 +582,7 @@ class HeadroomProxy(
         HeadroomProxy.GEMINI_API_URL = api_targets.gemini
         HeadroomProxy.CLOUDCODE_API_URL = api_targets.cloudcode
         HeadroomProxy.VERTEX_API_URL = api_targets.vertex
+        HeadroomProxy.MOONSHOT_API_URL = api_targets.moonshot
         self.anthropic_provider = self.provider_runtime.pipeline_provider("anthropic")
         self.openai_provider = self.provider_runtime.pipeline_provider("openai")
 
@@ -3910,6 +3911,7 @@ def _proxy_config_from_env() -> ProxyConfig:
             min_value=1,
         ),
         vertex_api_url=os.environ.get("VERTEX_TARGET_API_URL"),
+        moonshot_api_url=os.environ.get("MOONSHOT_TARGET_API_URL") or os.environ.get("MOONSHOT_BASE_URL"),
         backend=_get_env_str("HEADROOM_BACKEND", "anthropic"),
         bedrock_region=_get_env_str("HEADROOM_BEDROCK_REGION", "us-west-2"),
         bedrock_profile=os.environ.get("AWS_PROFILE"),
